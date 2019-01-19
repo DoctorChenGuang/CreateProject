@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "iview": "^3.2.2",
+    "ping": "^0.2.2",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1"
   },
