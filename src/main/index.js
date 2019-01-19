@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, MenuItem } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -13,7 +13,28 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
+
+const menu = new Menu()
+const donationMenuItem = new MenuItem(
+  {
+    label: "唯一的菜单",
+    click: () => {
+      const donationWindow = mainWindow = new BrowserWindow({
+        height: 340,
+        useContentSize: true,
+        width: 340,
+        frame: false
+      })
+      donationWindow.loadURL(`file://${__dirname}/static/QRCODE.html`)
+      donationWindow.show()
+    }
+  }
+)
+menu.append(donationMenuItem)
+
+Menu.setApplicationMenu(menu)
+
+function createWindow() {
   /**
    * Initial window options
    */
