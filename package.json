@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "electron-vue-template",
+    "productName": "自助脚手架",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"
