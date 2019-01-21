@@ -4,8 +4,8 @@
       <p slot="title">创建一个新的项目</p>
       <Tabs value="create_new_project" @on-click="tabChanged">
         <TabPane label="创建一个Cordova插件" name="create_cordova_plugin">
-          <Collapse>
-            <Panel>目录配置
+          <Collapse v-model="panelIndex" accordion>
+            <Panel name="1">目录配置
               <div slot="content">
                 <Form ref="cordovaPluginFolderConfigs" :model="cordovaPluginFolderConfigs">
                   <FormItem>
@@ -40,9 +40,9 @@
                 </Form>
               </div>
             </Panel>
-            <Panel>项目配置(C#)
+            <Panel name="2">项目配置(C#)
               <div slot="content" class="split-content">
-                <Split v-model="cordovaPluginSplitConfig">
+                <Split v-model="cordovaPluginCsharpSplitConfig">
                   <div slot="left" class="demo-split-pane">
                     <Form ref="cordovaPluginProjectConfigs" :model="cordovaPluginProjectConfigs">
                       <FormItem label="插件名">
@@ -54,7 +54,10 @@
                             <div class="point">.</div>
                           </Col>
                           <Col span="8">
-                            <Input v-model="cordovaPluginProjectConfigs.suffixPluginName"/>
+                            <Input
+                              v-model="cordovaPluginProjectConfigs.suffixPluginName"
+                              @on-blur="cordovaPluginCsharpNameBlurHandler"
+                            />
                           </Col>
                         </Row>
                       </FormItem>
@@ -85,20 +88,108 @@
                 </Split>
               </div>
             </Panel>
-            <Panel v-show="cordovaPluginFolderConfigs.isCreateCordovaPluginFoldeWithJs">项目配置(JS)</Panel>
+            <Panel
+              v-show="cordovaPluginFolderConfigs.isCreateCordovaPluginFoldeWithJs"
+              name="3"
+            >项目配置(Js/Ts)
+              <div slot="content">
+                <Alert>Js/Ts的部分项目配置根据
+                  <Button
+                    type="text"
+                    ghost
+                    style="color: #3a5c79"
+                    size="small"
+                    @click="panelIndex = '2'"
+                  >项目配置(C#)</Button>生成，若无法修改，请修改
+                  <Button
+                    type="text"
+                    ghost
+                    style="color: #3a5c79"
+                    size="small"
+                    @click="panelIndex = '2'"
+                  >项目配置(C#)</Button>,Js/Ts的部分项目配置会自动修改
+                </Alert>
+                <div class="split-content">
+                  <Split v-model="cordovaPluginJsSplitConfig">
+                    <div slot="left" class="demo-split-pane">
+                      <Form
+                        ref="cordovaPluginJsConfig"
+                        :model="cordovaPluginJsConfig"
+                        :label-width="100"
+                      >
+                        <FormItem label="所选语言">
+                          <Row>
+                            <Col span="10">
+                              <RadioGroup v-model="cordovaPluginJsConfig.language" type="button">
+                                <Radio label="javascript">
+                                  <Icon type="logo-javascript"/>
+                                </Radio>
+                                <Radio label="typescript">
+                                  <i class="iconfont icon-typescript"></i>
+                                </Radio>
+                              </RadioGroup>
+                            </Col>
+                          </Row>
+                        </FormItem>
+                        <FormItem label="插件名">
+                          <Row>
+                            <Col span="10">
+                              <Input v-model="cordovaPluginJsConfig.prefixPluginName"/>
+                            </Col>
+                            <Col span="1">
+                              <div class="point">-</div>
+                            </Col>
+                            <Col span="8">
+                              <Input
+                                v-model="cordovaPluginJsConfig.suffixPluginName"
+                                @on-blur="cordovaPluginJsNameBlurHandler"
+                              />
+                            </Col>
+                          </Row>
+                        </FormItem>
+                        <FormItem label="版本">
+                          <Row>
+                            <Col span="10">
+                              <Input v-model="cordovaPluginJsConfig.version"/>
+                            </Col>
+                          </Row>
+                        </FormItem>
+                      </Form>
+                    </div>
+                    <div slot="right" class="demo-split-pane">
+                      <p class="preview">预览</p>
+                    </div>
+                  </Split>
+                </div>
+              </div>
+            </Panel>
           </Collapse>
+          <div style="width: 100%; height: 100%; margin-top: 15px;">
+          <Button type="primary" :loading="isCreating" @click="createCordovaPluginProject">
+            <span v-if="!isCreating">创建</span>
+            <span v-else>Loading...</span>
+          </Button>
+          </div>
         </TabPane>
         <TabPane label="创建一个Aui-ss组件" name="create_auiss_component">
-          <Alert type="success" v-if="isNetworkAlive">内网连接状态正常，可以在Git服务器直接创建Aui组件项目</Alert>
-          <Alert type="error" v-else>内网连接状态异常，只可在本地创建Aui项目</Alert>
-          <Input v-model="networkTestTimeout">
-            <span slot="prepend">超时时间</span>
-            <Button slot="append" @click="checkNetwork">重新检测</Button>
-          </Input>
+          <Row>
+            <Col span="18">
+              <Alert type="success" v-if="isNetworkAlive" show-icon>内网连接状态正常，可以在Git服务器直接创建Aui组件项目</Alert>
+              <Alert type="error" v-else show-icon>内网连接状态异常，只可在本地创建Aui项目</Alert>
+            </Col>
+            <Col span="4" offset="1">
+              <Tooltip content="超时时间" placement="top-end">
+                <Input v-model="networkTestTimeout">
+                  <Button slot="append" @click="checkNetwork">重新检测</Button>
+                </Input>
+              </Tooltip>
+            </Col>
+          </Row>
         </TabPane>
-        <TabPane label="创建一个jssdk插件" name="create__jssdk_plugin">{{cordovaPluginMainFileName}}</TabPane>
+        <TabPane label="创建一个jssdk插件" name="create__jssdk_plugin">{{cordovaPluginJsConfig}}</TabPane>
       </Tabs>
     </Card>
+
     <Modal
       v-model="chooseCordovaPluginFolderWithCSharpDialog"
       title="拖入目录:awp/Awp.SS/Runtime.Cordova"
@@ -138,9 +229,11 @@
 export default {
   data() {
     return {
+      panelIndex: ["1"],
       isNetworkAlive: false,
       networkTestTimeout: "3",
-      cordovaPluginSplitConfig: 0.5,
+      cordovaPluginCsharpSplitConfig: 0.5,
+      cordovaPluginJsSplitConfig: 0.5,
       chooseCordovaPluginFolderWithCSharpDialog: false,
       chooseCordovaPluginFolderWithJsDialog: false,
       currentFilePath: "",
@@ -160,11 +253,18 @@ export default {
           }
         ]
       },
+      cordovaPluginJsConfig: {
+        prefixPluginName: "awp-plugin",
+        suffixPluginName: "",
+        language: "",
+        version: ""
+      },
       buttonProps: {
         type: "default",
         size: "small"
       },
-      cordovaPluginMainFileName: ""
+      cordovaPluginMainFileName: "",
+      isCreating: false
     };
   },
   watch: {
@@ -179,6 +279,11 @@ export default {
     cordovaPluginFullName() {
       return `${this.cordovaPluginProjectConfigs.prefixPluginName}.${
         this.cordovaPluginProjectConfigs.suffixPluginName
+      }`;
+    },
+    cordovaPluginJsFullName() {
+      return `${this.cordovaPluginJsConfig.prefixPluginName}-${
+        this.cordovaPluginJsConfig.suffixPluginName
       }`;
     },
     cordovaPluginPreviewTreeData() {
@@ -588,6 +693,36 @@ export default {
     this.addFileDropEventListener();
   },
   methods: {
+    createCordovaPluginProject() {
+      this.isCreating = true;
+      setTimeout(() => {
+        this.isCreating = false;
+      }, 3000);
+    },
+    cordovaPluginCsharpNameBlurHandler() {
+      const fullPath = require("path").join(
+        this.cordovaPluginFolderConfigs.cSharpPath,
+        this.cordovaPluginFullName
+      );
+      if (require("fs").existsSync(fullPath)) {
+        this.$Notice.error({
+          title: "异常",
+          desc: `项目${fullPath}已经存在，请重新配置`
+        });
+      }
+    },
+    cordovaPluginJsNameBlurHandler() {
+      const fullPath = require("path").join(
+        this.cordovaPluginFolderConfigs.jsPath,
+        this.cordovaPluginJsFullName
+      );
+      if (require("fs").existsSync(fullPath)) {
+        this.$Notice.error({
+          title: "异常",
+          desc: `项目${fullPath}已经存在，请重新配置`
+        });
+      }
+    },
     checkNetwork() {
       if (this.networkTestTimeout * 1 < 3) {
         this.$Notice.error({
@@ -597,7 +732,7 @@ export default {
       }
       this.$Spin.show({
         render: h => {
-          return h("div", [h("div", `正在检查网络...(反应慢，多试几次)`)]);
+          return h("div", [h("div", `正在检查网络...`)]);
         }
       });
       require("ping").sys.probe(
@@ -666,11 +801,13 @@ export default {
       this.cordovaPluginFolderConfigs.cSharpPath = this.currentFilePath;
       this.chooseCordovaPluginFolderWithCSharpDialog = false;
       this.isAbletoEnsureCordovaPluginFolder = true;
+      this.currentFilePath = "";
     },
     ensureCordovaPluginFolderWithJs() {
       this.cordovaPluginFolderConfigs.jsPath = this.currentFilePath;
       this.chooseCordovaPluginFolderWithJsDialog = false;
       this.isAbletoEnsureCordovaPluginFolder = true;
+      this.currentFilePath = "";
     },
     chooseCordovaPluginFolderWithCSharp() {
       this.openChooseFileDialog("chooseCordovaPluginFolderWithCSharpDialog");
