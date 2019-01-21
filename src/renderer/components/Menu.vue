@@ -10,14 +10,14 @@
                 <Form ref="cordovaPluginFolderConfigs" :model="cordovaPluginFolderConfigs">
                   <FormItem>
                     <Row>
-                      <Col span="4">
+                      <i-col span="4">
                         <Tooltip content="请选择awp/Awp.SS/Runtime.Cordova目录" placement="top-start">
                           <Button @click="chooseCordovaPluginFolderWithCSharp">选择目录</Button>
                         </Tooltip>
-                      </Col>
-                      <Col span="20">
+                      </i-col>
+                      <i-col span="20">
                         <p>{{cordovaPluginFolderConfigs.cSharpPath}}</p>
-                      </Col>
+                      </i-col>
                     </Row>
                   </FormItem>
                   <FormItem>
@@ -27,14 +27,14 @@
                   </FormItem>
                   <FormItem v-show="cordovaPluginFolderConfigs.isCreateCordovaPluginFoldeWithJs">
                     <Row>
-                      <Col span="4">
+                      <i-col span="4">
                         <Tooltip content="请选择awpjssdk/src目录" placement="top-start">
                           <Button @click="chooseCordovaPluginFolderWithJs">选择目录</Button>
                         </Tooltip>
-                      </Col>
-                      <Col span="20">
+                      </i-col>
+                      <i-col span="20">
                         <p>{{cordovaPluginFolderConfigs.jsPath}}</p>
-                      </Col>
+                      </i-col>
                     </Row>
                   </FormItem>
                 </Form>
@@ -47,36 +47,36 @@
                     <Form ref="cordovaPluginProjectConfigs" :model="cordovaPluginProjectConfigs">
                       <FormItem label="插件名">
                         <Row>
-                          <Col span="10">
+                          <i-col span="10">
                             <Input v-model="cordovaPluginProjectConfigs.prefixPluginName"/>
-                          </Col>
-                          <Col span="1">
+                          </i-col>
+                          <i-col span="1">
                             <div class="point">.</div>
-                          </Col>
-                          <Col span="8">
+                          </i-col>
+                          <i-col span="8">
                             <Input
                               v-model="cordovaPluginProjectConfigs.suffixPluginName"
                               @on-blur="cordovaPluginCsharpNameBlurHandler"
                             />
-                          </Col>
+                          </i-col>
                         </Row>
                       </FormItem>
                       <FormItem label="是否加载日志模块">
                         <Row>
-                          <Col span="1">
+                          <i-col span="1">
                             <Checkbox v-model="cordovaPluginProjectConfigs.isLoadLogger"></Checkbox>
-                          </Col>
+                          </i-col>
                         </Row>
                       </FormItem>
                       <FormItem label="公共的CordovaPlugin方法：">
                         <Row>
-                          <Col span="10">
+                          <i-col span="10">
                             <Input
                               v-for="(methods, index) in cordovaPluginProjectConfigs.methodsList"
                               :key="index"
                               v-model="methods.methodsName"
                             />
-                          </Col>
+                          </i-col>
                         </Row>
                       </FormItem>
                     </Form>
@@ -97,14 +97,14 @@
                   <Button
                     type="text"
                     ghost
-                    style="color: #3a5c79"
+                    style="i-color: #3a5c79"
                     size="small"
                     @click="panelIndex = '2'"
                   >项目配置(C#)</Button>生成，若无法修改，请修改
                   <Button
                     type="text"
                     ghost
-                    style="color: #3a5c79"
+                    style="i-color: #3a5c79"
                     size="small"
                     @click="panelIndex = '2'"
                   >项目配置(C#)</Button>,Js/Ts的部分项目配置会自动修改
@@ -119,7 +119,7 @@
                       >
                         <FormItem label="所选语言">
                           <Row>
-                            <Col span="10">
+                            <i-col span="10">
                               <RadioGroup v-model="cordovaPluginJsConfig.language" type="button">
                                 <Radio label="javascript">
                                   <Icon type="logo-javascript"/>
@@ -128,30 +128,30 @@
                                   <i class="iconfont icon-typescript"></i>
                                 </Radio>
                               </RadioGroup>
-                            </Col>
+                            </i-col>
                           </Row>
                         </FormItem>
                         <FormItem label="插件名">
                           <Row>
-                            <Col span="10">
+                            <i-col span="10">
                               <Input v-model="cordovaPluginJsConfig.prefixPluginName"/>
-                            </Col>
-                            <Col span="1">
+                            </i-col>
+                            <i-col span="1">
                               <div class="point">-</div>
-                            </Col>
-                            <Col span="8">
+                            </i-col>
+                            <i-col span="8">
                               <Input
                                 v-model="cordovaPluginJsConfig.suffixPluginName"
                                 @on-blur="cordovaPluginJsNameBlurHandler"
                               />
-                            </Col>
+                            </i-col>
                           </Row>
                         </FormItem>
                         <FormItem label="版本">
                           <Row>
-                            <Col span="10">
+                            <i-col span="10">
                               <Input v-model="cordovaPluginJsConfig.version"/>
-                            </Col>
+                            </i-col>
                           </Row>
                         </FormItem>
                       </Form>
@@ -173,17 +173,17 @@
         </TabPane>
         <TabPane label="创建一个Aui-ss组件" name="create_auiss_component">
           <Row>
-            <Col span="18">
+            <i-col span="18">
               <Alert type="success" v-if="isNetworkAlive" show-icon>内网连接状态正常，可以在Git服务器直接创建Aui组件项目</Alert>
               <Alert type="error" v-else show-icon>内网连接状态异常，只可在本地创建Aui项目</Alert>
-            </Col>
-            <Col span="4" offset="1">
+            </i-col>
+            <i-col span="4" offset="1">
               <Tooltip content="超时时间" placement="top-end">
-                <Input v-model="networkTestTimeout">
+                <i-input v-model="networkTestTimeout">
                   <Button slot="append" @click="checkNetwork">重新检测</Button>
-                </Input>
+                </i-input>
               </Tooltip>
-            </Col>
+            </i-col>
           </Row>
         </TabPane>
         <TabPane label="创建一个jssdk插件" name="create__jssdk_plugin">{{cordovaPluginJsConfig}}</TabPane>
@@ -256,8 +256,8 @@ export default {
       cordovaPluginJsConfig: {
         prefixPluginName: "awp-plugin",
         suffixPluginName: "",
-        language: "",
-        version: ""
+        language: "javascript",
+        version: "1.0.0"
       },
       buttonProps: {
         type: "default",
