@@ -542,37 +542,33 @@ export default {
                               }()`,
                               expand: false,
                               render: (h, { root, node, data }) => {
-                                if (
-                                  this.cordovaPluginProjectConfigs.isLoadLogger
-                                ) {
-                                  return h(
-                                    "span",
-                                    {
+                                return h(
+                                  "span",
+                                  {
+                                    style: {
+                                      display: "inline-block",
+                                      width: "100%"
+                                    }
+                                  },
+                                  [
+                                    h("span", [
+                                      h("i", {
+                                        class: "iconfont icon-function",
+                                        style: {
+                                          marginRight: "8px"
+                                        }
+                                      }),
+                                      h("span", data.title)
+                                    ]),
+                                    h("span", {
                                       style: {
                                         display: "inline-block",
-                                        width: "100%"
+                                        float: "right",
+                                        marginRight: "32px"
                                       }
-                                    },
-                                    [
-                                      h("span", [
-                                        h("i", {
-                                          class: "iconfont icon-function",
-                                          style: {
-                                            marginRight: "8px"
-                                          }
-                                        }),
-                                        h("span", data.title)
-                                      ]),
-                                      h("span", {
-                                        style: {
-                                          display: "inline-block",
-                                          float: "right",
-                                          marginRight: "32px"
-                                        }
-                                      })
-                                    ]
-                                  );
-                                }
+                                    })
+                                  ]
+                                );
                               }
                             }
                           ]
@@ -595,7 +591,7 @@ export default {
     checkNetwork() {
       if (this.networkTestTimeout * 1 < 3) {
         this.$Notice.error({
-          title: "超时时间小于3秒无法检测",
+          title: "超时时间小于3秒无法检测"
         });
         return;
       }
